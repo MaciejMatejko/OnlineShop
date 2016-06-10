@@ -1,1 +1,1 @@
-# OnlineShop
+# OnlineShop by Maciej Matejko & Marcin Hernik.
