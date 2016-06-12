@@ -15,6 +15,7 @@ class Item {
         $this->description = '';
     }
     
+    //gettery i settery
     public function getId(){
         return $this->id;
     }
@@ -59,6 +60,7 @@ class Item {
         return $this->description;
     }
     
+    //funkcja ładuje z db Item o zadanym id.
     public function loadItemFromDB(mysqli $conn, $id){
         $sql="SELECT *FROM Item WHERE id='{$id}'";
         $result=$conn->query($sql);
@@ -75,6 +77,7 @@ class Item {
         }
     }
     
+    //funkcja tworzy lub edytuje Item w bazie danych
     public function saveItemToDB(mysqli $conn){
         if($this->id===-1){
             $sql="INSERT INTO Item (name, price, stock, description) VALUES ('{$this->name}', '{$this->price}', '{$this->stock}', '{$this->description}')";
