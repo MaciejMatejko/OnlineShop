@@ -2,12 +2,10 @@
 
 class User {
     
-    public static function login(mysqli $conn, $email){
-        $sql="SELECT * FROM User WHERE email='{$email}'";
-        $result=$conn->query($sql);
-        if($result->num_rows ===1){
-            $row=$result->fetch_accos();
-            if(password_verify($row['password'], PASSWORD_BCRYPT)){
+    public static function login(mysqli $conn, $email, $password){
+        
+        if($row=User::getUserByEmail($conn, $email)){
+            if(password_verify($password, $row['password'])){
                 return $row['id'];
             }
         }
@@ -103,7 +101,9 @@ class User {
             $this->name=$row['name'];
             $this->surname=$row['surname'];
             $this->email=$row['email'];
+            $this->password=$row['password'];
             $this->address=$row['address'];
+            return true;
         }
         else{
             return false;
@@ -132,4 +132,16 @@ class User {
             }
         }
     }
+    
+    public function getOrdersHistory(mysqli $conn){
+        $ordersHistory=[];
+        $sql="SELECT * FROM `Order` JOIN Product_Order ON order_id=id WHERE user_id='{$this->id}'";
+        $result=$conn->query($sql);
+        if($result->num_rows>0){
+            $row=$result->fetch_assoc();
+            $ordersHistory[]=$row;
+        }
+        return $ordersHistory;
+    }
+    
 }

@@ -42,7 +42,7 @@ class Item {
     
     public function setStock($newStock){
         if(intval($newStock)>=0){
-            $this->price = $newStock;
+            $this->stock = $newStock;
         }
     }
     
