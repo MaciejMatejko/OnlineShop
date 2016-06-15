@@ -2,6 +2,7 @@
 
 class Admin{
     
+    //static method validating Admin by email and password
     public static function login(mysqli $conn, $email, $password){
         if($row=Admin::getAdminByEmail($conn, $email)){
             if(password_verify($password, $row['password'])){
@@ -11,6 +12,7 @@ class Admin{
         return false;
     }
     
+    //static method loading from db Admin with given email
     public static function getAdminByEmail(mysqli $conn, $email){
         $sql="SELECT * FROM Admin WHERE email='{$email}'";
         $result=$conn->query($sql);
@@ -32,7 +34,7 @@ class Admin{
         $this->password="";
     }
     
-    //settery i gettery
+    //getters and setters
     public function getId(){
         return $this->id;
     }
@@ -55,7 +57,7 @@ class Admin{
         return true;
     }
     
-    //funkcja ładuje z db Admina o danym id
+    //method loading from db Admin with given id 
     public function loadAdminFromDB(mysqli $conn, $id){
         $sql="SELECT * FROM Admin WHERE id='{$id}'";
         $result=$conn->query($sql);
@@ -71,8 +73,8 @@ class Admin{
         }
     }
     
-    //funkcja tworzy nowego lub edytuje stniejącego Admina w db
-    public function saveToDB(mysqli $conn){
+    //method creating new or updating existing Admin to db
+    public function saveAdminToDB(mysqli $conn){
         if($this->id===-1){
             $sql="INSERT INTO Admin (email, password) VALUES ('{$this->email}', '{$this->password}')";
             if($conn->query($sql)){
@@ -84,7 +86,7 @@ class Admin{
             }
         }
         else{
-            $sql = "UPDATE User SET email='{$this->email}', password='{$this->password}' WHERE id='{$this->id}'";
+            $sql = "UPDATE Admin SET email='{$this->email}', password='{$this->password}' WHERE id='{$this->id}'";
             if($conn->query($sql)){
                 return true;
             }
@@ -92,6 +94,17 @@ class Admin{
                 return false;
             }
         }
+    }
+    
+    //method sending Message to user
+    public function sendMessage(mysqli $conn, $userId, $orderId, $text){
+        $message= new Message();
+        $message->setAdminId($this->getId());
+        $message->setUserId($userId);
+        $message->setOrderId($orderId);
+        $message->setText($text);
+        
+        return $message->saveMessageToDB($conn);
     }
     
 }

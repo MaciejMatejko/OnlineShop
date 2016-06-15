@@ -2,6 +2,7 @@
 
 class User {
     
+    //static method validating User by email and password
     public static function login(mysqli $conn, $email, $password){
         
         if($row=User::getUserByEmail($conn, $email)){
@@ -12,6 +13,7 @@ class User {
         return false;
     }
     
+    //static method loading from db User with given email
     public static function getUserByEmail(mysqli $conn, $email){
         $sql="SELECT * FROM User WHERE email='{$email}'";
         $result=$conn->query($sql);
@@ -39,6 +41,7 @@ class User {
         $this->address = "";
     }
     
+    //getters and setters
     public function getId(){
         return $this->id;
     }
@@ -91,7 +94,7 @@ class User {
         return $this->address;
     }
     
-    //funkcja ładuje z db Usera o zadanym id.
+    //method loading from db User with given id 
     public function loadUserFromDB(mysqli $conn, $id){
         $sql="SELECT *FROM User WHERE id='{$id}'";
         $result=$conn->query($sql);
@@ -110,8 +113,8 @@ class User {
         }
     }
     
-    ////funkcja tworzy lub edytuje Usera w bazie danych
-    public function saveItemToDB(mysqli $conn){
+    ////method creating new or updating existing User to db
+    public function saveUserToDB(mysqli $conn){
         if($this->id ===-1){
             $sql="INSERT INTO User (name, surname, email, password, address) VALUES ('{$this->name}', '{$this->surname}', '{$this->email}', '{$this->password}', '{$this->address}')";
             if($conn->query($sql)){
@@ -133,6 +136,7 @@ class User {
         }
     }
     
+    //method loading User's order history and returning it in array
     public function getOrdersHistory(mysqli $conn){
         $ordersHistory=[];
         $sql="SELECT * FROM `Order` JOIN Product_Order ON order_id=id WHERE user_id='{$this->id}'";
